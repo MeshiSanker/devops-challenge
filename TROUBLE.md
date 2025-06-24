@@ -32,3 +32,25 @@ This error indicated that the primary key used in the application's query (`code
 #### Current Status:
 
 The application is currently unable to retrieve data from DynamoDB, resulting in an error at the `/secret` endpoint. To find the correct primary key for the table and resolve the `ValidationException`, the IAM role's policy for the user should be checked. 
+
+---
+
+### 2. CI/CD Pipeline Blocked by Travis CI Free Plan Limitation
+
+#### Problem:
+
+The CI/CD pipeline, which was set up using Travis CI and defined in the `.travis.yml` file, could not be activated or run. Although the repository was correctly linked to Travis CI and the `.travis.yml` file was present in the root directory, no builds were triggered after multiple commits.
+
+#### Troubleshooting Steps:
+
+1.  **Repository Activation:** Verified that the GitHub repository was enabled in the Travis CI dashboard.
+2.  **Configuration File:** Confirmed the `.travis.yml` file was correctly placed in the project's root directory.
+3.  **Manual Trigger:** Pushed multiple empty commits to the repository to manually trigger a new build, but no builds appeared in the Travis CI UI.
+
+#### Resolution:
+
+The issue was identified as a limitation with the Travis CI account itself. The free trial, which is required to run builds on private or public repositories under the current `travis-ci.com` platform, was not available or had expired for the account. Without an active plan, Travis CI will not process any build jobs.
+
+#### Current Status:
+
+The CI/CD automation is currently blocked.
