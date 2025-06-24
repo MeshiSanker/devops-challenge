@@ -6,4 +6,15 @@ services:
     env_file:
       - .env
     ports:
-      - "5000:5000" 
+      - "5000:5000"
+    volumes:
+      - ./app:/app
+  
+  test:
+    build: .
+    env_file:
+      - .env
+    volumes:
+      - ./app:/app
+      - ./test:/app/test
+    command: ["python", "-m", "unittest", "discover", "/app/test"] 

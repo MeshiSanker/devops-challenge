@@ -1,4 +1,3 @@
-dist: focal
 language: python
 python:
   - "3.9"
@@ -6,16 +5,25 @@ python:
 services:
   - docker
 
-install:
-  - pip install -r requirements.txt
+env:
+  global:
+    # The image will be tagged with this name on Docker Hub
+    - IMAGE_NAME=devops-challenge-2025
+
+# The 'install' step is not needed because dependencies are handled
+# within the Docker build process defined in docker-compose.yml.
 
 script:
-  - python -m unittest discover test
+  # Run tests using the dedicated 'test' service
+  - docker-compose run --rm test
 
 after_success:
+  # This section runs only after the 'script' section (tests) succeeds.
+  # It builds the Docker image and pushes it to Docker Hub.
+  #
+  # IMPORTANT:
+  # You must configure DOCKER_USERNAME and DOCKER_PASSWORD as secure
+  # environment variables in your Travis CI repository settings for this to work.
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker build -t $DOCKER_USERNAME/devops-challenge .
-  - docker push $DOCKER_USERNAME/devops-challenge
-
-notifications:
-  email: false 
+  - docker build -t "$DOCKER_USERNAME/$IMAGE_NAME" .
+  - docker push "$DOCKER_USERNAME/$IMAGE_NAME"
