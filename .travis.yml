@@ -1,0 +1,20 @@
+language: python
+python:
+  - "3.9"
+
+services:
+  - docker
+
+install:
+  - pip install -r requirements.txt
+
+script:
+  - python -m unittest discover test
+
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t $DOCKER_USERNAME/devops-challenge .
+  - docker push $DOCKER_USERNAME/devops-challenge
+
+notifications:
+  email: false 
